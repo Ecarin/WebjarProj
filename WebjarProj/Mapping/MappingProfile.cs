@@ -10,6 +10,8 @@ namespace WebjarProj.Mapping
         {
             CreateMap<CreateAddonRequest, Addon>();
             CreateMap<UpdateAddonRequest, Addon>();
+            CreateMap<CreateFeatureRequest, Feature>();
+            CreateMap<UpdateFeatureRequest, Feature>();
         }
     }
 }

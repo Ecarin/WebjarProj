@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebjarProj.Models;
 using WebjarProj.Models.Requests;
 using WebjarProj.Models.Responses;
-using WebjarProj.Services;
-using WebjarProj.Services.Implementations;
+using WebjarProj.Services.Interfaces;
 
 namespace WebjarProj.Controllers
 {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using WebjarProj.Models;
 using WebjarProj.Models.Requests;
 
-namespace WebjarProj.Services.Implementations
+namespace WebjarProj.Services.Interfaces
 {
     public interface IAddonService
     {

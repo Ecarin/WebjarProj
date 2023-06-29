@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebjarProj.Data;
 using WebjarProj.Models;
-using WebjarProj.Services.Implementations;
+using WebjarProj.Services.Interfaces;
 
-namespace WebjarProj.Services.Interfaces
+namespace WebjarProj.Services.Implementations
 {
     public class AddonService : IAddonService
     {
