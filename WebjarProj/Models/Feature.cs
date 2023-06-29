@@ -1,12 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace WebjarProj.Models
+namespace WebjarProj.Models;
+public class Feature
 {
-    public class Feature
-    {
-        [Key]
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Value { get; set; }
-    }
+    [Key]
+    public int Id { get; set; }
+
+    [Required]
+    public string Name { get; set; }    
+    
+    [Required]
+    public string Value { get; set; }
 }

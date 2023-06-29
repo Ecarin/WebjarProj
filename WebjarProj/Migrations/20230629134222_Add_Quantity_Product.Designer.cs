@@ -12,8 +12,8 @@ using WebjarProj.Data;
 namespace WebjarProj.Migrations
 {
     [DbContext(typeof(WebjarContext))]
-    [Migration("20230629113224_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230629134222_Add_Quantity_Product")]
+    partial class Add_Quantity_Product
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -104,9 +104,35 @@ namespace WebjarProj.Migrations
                     b.Property<int>("PriceType")
                         .HasColumnType("int");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("WebjarProj.Models.Product_Feature", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FeatureId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FeatureId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Product_Features");
                 });
 
             modelBuilder.Entity("WebjarProj.Models.Addon", b =>
@@ -121,6 +147,25 @@ namespace WebjarProj.Migrations
                     b.HasOne("WebjarProj.Models.Product", null)
                         .WithMany("Features")
                         .HasForeignKey("ProductId");
+                });
+
+            modelBuilder.Entity("WebjarProj.Models.Product_Feature", b =>
+                {
+                    b.HasOne("WebjarProj.Models.Feature", "Feature")
+                        .WithMany()
+                        .HasForeignKey("FeatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebjarProj.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Feature");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("WebjarProj.Models.Product", b =>
