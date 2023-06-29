@@ -9,6 +9,7 @@ namespace WebjarProj.Mapping
         public MappingProfile()
         {
             CreateMap<CreateAddonRequest, Addon>();
+            CreateMap<UpdateAddonRequest, Addon>();
         }
     }
 }

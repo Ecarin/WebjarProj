@@ -50,7 +50,7 @@ namespace WebjarProj.Controllers
             }
             catch (Exception e)
             {
-                var _response = new SingleAddonResponse()
+                var _response = new ResultDTO()
                 {
                     Message = $"{e.HResult}: {e.Message}",
                 };
@@ -86,7 +86,7 @@ namespace WebjarProj.Controllers
             }
             catch (Exception e)
             {
-                var _response = new AddonsResponse()
+                var _response = new ResultDTO()
                 {
                     Message = $"{e.HResult}: {e.Message}",
                 };
@@ -102,51 +102,75 @@ namespace WebjarProj.Controllers
                 var addon = _mapper.Map<Addon>(request);
                 await _addonService.CreateAddonAsync(addon);
 
-                var response = new ResultDTO
+                var ـresponse = new ResultDTO
                 {
                     Success = true,
                     Message = "Addon created successfully."
                 };
 
-                return CreatedAtAction(nameof(GetAddonById), new { id = addon.Id }, response);
+                return CreatedAtAction(nameof(CreateAddon), ـresponse);
             }
-            catch (System.Exception)
+            catch (Exception e)
             {
-
-                throw;
+                var _response = new ResultDTO()
+                {
+                    Message = $"{e.HResult}: {e.Message}",
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
-
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ResultDTO>> UpdateAddon(int id, Addon addon)
+        public async Task<ActionResult<ResultDTO>> UpdateAddon(int id, UpdateAddonRequest request)
         {
-            if (id != addon.Id)
-                return BadRequest();
-
-            await _addonService.UpdateAddonAsync(addon);
-
-            var response = new ResultDTO
+            try
             {
-                Success = true,
-                Message = "Addon updated successfully."
-            };
+                var addon = _mapper.Map<Addon>(request);
+                addon.Id = id;
 
-            return Ok(response);
+                await _addonService.UpdateAddonAsync(addon);
+
+                var _response = new ResultDTO
+                {
+                    Success = true,
+                    Message = "Addon updated successfully."
+                };
+
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                var _response = new ResultDTO()
+                {
+                    Message = $"{e.HResult}: {e.Message}",
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResultDTO>> DeleteAddon(int id)
         {
-            await _addonService.DeleteAddonAsync(id);
-
-            var response = new ResultDTO
+            try
             {
-                Success = true,
-                Message = "Addon deleted successfully."
-            };
+                await _addonService.DeleteAddonAsync(id);
 
-            return Ok(response);
+                var _response = new ResultDTO
+                {
+                    Success = true,
+                    Message = "Addon deleted successfully."
+                };
+
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                var _response = new ResultDTO()
+                {
+                    Message = $"{e.HResult}: {e.Message}",
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
         }
     }
 }

@@ -7,7 +7,9 @@ public class CreateAddonRequest
     public decimal Price { get; set; }
 }
 
-public class UpdateAddonRequest : Addon
+public class UpdateAddonRequest
 {
-
+    public string Name { get; set; }
+    
+    public decimal Price { get; set; }
 }
