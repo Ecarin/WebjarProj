@@ -23,10 +23,6 @@ public class Product
 
     public DateTime? DiscountExpireAt { get; set; }
 
-    public List<Feature> Features { get; set; }
-
-    public List<Addon> Addons { get; set; }
-
     [Required]
     public int Quantity { get; set; }
 }
