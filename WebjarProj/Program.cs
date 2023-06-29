@@ -1,6 +1,7 @@
 using WebjarProj.Services.Implementations;
 using WebjarProj.Services.Interfaces;
 using WebjarProj.Data;
+using WebjarProj.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,9 @@ builder.Services.AddDbContext<WebjarDbContext>();
 
 // Register Services Interface
 builder.Services.AddScoped<IAddonService, AddonService>();
+
+// Register AutoMapper
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 
 var app = builder.Build();

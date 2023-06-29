@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebjarProj.Models;
+using WebjarProj.Models.Requests;
 using WebjarProj.Models.Responses;
 using WebjarProj.Services;
 using WebjarProj.Services.Implementations;
@@ -11,10 +13,12 @@ namespace WebjarProj.Controllers
     [Route("api/[controller]")]
     public class AddonsController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly IAddonService _addonService;
 
-        public AddonsController(IAddonService addonService)
+        public AddonsController(IMapper mapper, IAddonService addonService)
         {
+            _mapper = mapper;
             _addonService = addonService;
         }
 
@@ -91,17 +95,27 @@ namespace WebjarProj.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResultDTO>> CreateAddon(Addon addon)
+        public async Task<ActionResult<ResultDTO>> CreateAddon(CreateAddonRequest request)
         {
-            await _addonService.CreateAddonAsync(addon);
-
-            var response = new ResultDTO
+            try
             {
-                Success = true,
-                Message = "Addon created successfully."
-            };
+                var addon = _mapper.Map<Addon>(request);
+                await _addonService.CreateAddonAsync(addon);
 
-            return CreatedAtAction(nameof(GetAddonById), new { id = addon.Id }, response);
+                var response = new ResultDTO
+                {
+                    Success = true,
+                    Message = "Addon created successfully."
+                };
+
+                return CreatedAtAction(nameof(GetAddonById), new { id = addon.Id }, response);
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+
         }
 
         [HttpPut("{id}")]
