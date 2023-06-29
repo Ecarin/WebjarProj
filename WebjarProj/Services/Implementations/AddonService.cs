@@ -30,7 +30,7 @@ namespace WebjarProj.Services.Implementations
 
         public async Task CreateAddonAsync(Addon addon)
         {
-            if (addon == null)
+            if (addon is null)
                 throw new ArgumentNullException(nameof(addon));
 
             _context.Addons.Add(addon);
@@ -39,7 +39,7 @@ namespace WebjarProj.Services.Implementations
 
         public async Task UpdateAddonAsync(Addon addon)
         {
-            if (addon == null)
+            if (addon is null)
                 throw new ArgumentNullException(nameof(addon));
 
             _context.Addons.Update(addon);
@@ -49,7 +49,7 @@ namespace WebjarProj.Services.Implementations
         public async Task DeleteAddonAsync(int id)
         {
             var addon = await _context.Addons.FindAsync(id);
-            if (addon == null)
+            if (addon is null)
                 throw new ArgumentException("Addon not found.");
 
             _context.Addons.Remove(addon);
