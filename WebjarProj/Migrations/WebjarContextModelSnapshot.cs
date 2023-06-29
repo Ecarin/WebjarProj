@@ -10,7 +10,7 @@ using WebjarProj.Data;
 
 namespace WebjarProj.Migrations
 {
-    [DbContext(typeof(WebjarContext))]
+    [DbContext(typeof(WebjarDbContext))]
     partial class WebjarContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

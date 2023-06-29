@@ -1,6 +1,6 @@
 namespace WebjarProj.Models.Responses;
 
-public class ImageRequest
+public class ImageResponse
 {
     
 }

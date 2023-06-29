@@ -2,7 +2,7 @@
 using WebjarProj.Models;
 
 namespace WebjarProj.Data;
-public class WebjarContext : DbContext
+public class WebjarDbContext : DbContext
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Feature> Features { get; set; }

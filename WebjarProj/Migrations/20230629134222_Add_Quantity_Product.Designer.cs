@@ -11,7 +11,7 @@ using WebjarProj.Data;
 
 namespace WebjarProj.Migrations
 {
-    [DbContext(typeof(WebjarContext))]
+    [DbContext(typeof(WebjarDbContext))]
     [Migration("20230629134222_Add_Quantity_Product")]
     partial class Add_Quantity_Product
     {

@@ -11,7 +11,7 @@ using WebjarProj.Data;
 
 namespace WebjarProj.Migrations
 {
-    [DbContext(typeof(WebjarContext))]
+    [DbContext(typeof(WebjarDbContext))]
     [Migration("20230629133737_Create_Database")]
     partial class Create_Database
     {

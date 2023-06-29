@@ -11,7 +11,7 @@ using WebjarProj.Data;
 
 namespace WebjarProj.Migrations
 {
-    [DbContext(typeof(WebjarContext))]
+    [DbContext(typeof(WebjarDbContext))]
     [Migration("20230629141204_Update_Addon_Feature")]
     partial class Update_Addon_Feature
     {

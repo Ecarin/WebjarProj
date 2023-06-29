@@ -1,6 +1,6 @@
 namespace WebjarProj.Models.Responses;
 
-public class ProductRequest
+public class ProductResponse
 {
     
 }
