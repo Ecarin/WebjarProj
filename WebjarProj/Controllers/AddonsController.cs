@@ -21,31 +21,24 @@ namespace WebjarProj.Controllers
             _addonService = addonService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SingleAddonResponse>> GetAddonById(int id)
+        [HttpPost]
+        public async Task<ActionResult<ResultDTO>> CreateAddon(CreateAddonRequest request)
         {
             try
             {
-                var addon = await _addonService.GetAddonByIdAsync(id);
-                if (addon is null)
+                // Mapping request to Addon
+                var addon = _mapper.Map<Addon>(request);
+                
+                // Inserting Addon to db
+                await _addonService.CreateAddonAsync(addon);
+
+                // returning response
+                var ـresponse = new ResultDTO
                 {
-                    var _response = new SingleAddonResponse
-                    {
-                        Success = true,
-                        Message = "Addon not found."
-                    };
-                    return Ok(_response);
-                }
-                else
-                {
-                    var _response = new SingleAddonResponse
-                    {
-                        Success = true,
-                        Message = "Addon retrieved successfully.",
-                        Addon = addon
-                    };
-                    return Ok(_response);
-                }
+                    Success = true,
+                    Message = "Addon created successfully."
+                };
+                return CreatedAtAction(nameof(CreateAddon), ـresponse);
             }
             catch (Exception e)
             {
@@ -62,8 +55,10 @@ namespace WebjarProj.Controllers
         {
             try
             {
+                // Getting Addons from db
                 var addons = await _addonService.GetAllAddonsAsync();
-                if (addons is null || addons.Count == 0)
+
+                if (addons is null || addons.Count == 0) // No Addons found
                 {
                     var _response = new AddonsResponse
                     {
@@ -72,7 +67,7 @@ namespace WebjarProj.Controllers
                     };
                     return Ok(_response);
                 }
-                else
+                else // Some Addons found
                 {
                     var _response = new AddonsResponse
                     {
@@ -93,21 +88,32 @@ namespace WebjarProj.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ResultDTO>> CreateAddon(CreateAddonRequest request)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SingleAddonResponse>> GetAddonById(int id)
         {
             try
             {
-                var addon = _mapper.Map<Addon>(request);
-                await _addonService.CreateAddonAsync(addon);
-
-                var ـresponse = new ResultDTO
+                // Getting Addon from db
+                var addon = await _addonService.GetAddonByIdAsync(id);
+                if (addon is null) // No Addon found
                 {
-                    Success = true,
-                    Message = "Addon created successfully."
-                };
-
-                return CreatedAtAction(nameof(CreateAddon), ـresponse);
+                    var _response = new SingleAddonResponse
+                    {
+                        Success = true,
+                        Message = "Addon not found."
+                    };
+                    return Ok(_response);
+                }
+                else // Result found
+                {
+                    var _response = new SingleAddonResponse
+                    {
+                        Success = true,
+                        Message = "Addon retrieved successfully.",
+                        Addon = addon
+                    };
+                    return Ok(_response);
+                }
             }
             catch (Exception e)
             {
@@ -118,15 +124,16 @@ namespace WebjarProj.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
-
         [HttpPut("{id}")]
         public async Task<ActionResult<ResultDTO>> UpdateAddon(int id, UpdateAddonRequest request)
         {
             try
             {
+                // Mapping request to Addon
                 var addon = _mapper.Map<Addon>(request);
-                addon.Id = id;
+                addon.Id = id; // Because our request didn't have Id we have to map it manually
 
+                // Update Addon
                 await _addonService.UpdateAddonAsync(addon);
 
                 var _response = new ResultDTO
@@ -134,7 +141,6 @@ namespace WebjarProj.Controllers
                     Success = true,
                     Message = "Addon updated successfully."
                 };
-
                 return Ok(_response);
             }
             catch (Exception e)
@@ -146,12 +152,12 @@ namespace WebjarProj.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
-
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResultDTO>> DeleteAddon(int id)
         {
             try
             {
+                // Deleting Addon from db
                 await _addonService.DeleteAddonAsync(id);
 
                 var _response = new ResultDTO
@@ -159,7 +165,6 @@ namespace WebjarProj.Controllers
                     Success = true,
                     Message = "Addon deleted successfully."
                 };
-
                 return Ok(_response);
             }
             catch (Exception e)
