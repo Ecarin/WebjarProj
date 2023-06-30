@@ -33,12 +33,12 @@ namespace WebjarProj.Services.Implementations
                 {
                     foreach (var item in featureIds)
                     {
-                        var product_Feature = new Product_Feature()
-                        {
-                            ProductId = productId,
-                            FeatureId = item,
-                        };
-                        await _dbContext.Product_Features.AddAsync(product_Feature);
+                        // var product_Feature = new Product_Feature()
+                        // {
+                        //     ProductId = productId,
+                        //     FeatureId = item,
+                        // };
+                        // await _dbContext.Product_Features.AddAsync(product_Feature);
                     }
                 }
                 await _dbContext.SaveChangesAsync();
@@ -70,19 +70,51 @@ namespace WebjarProj.Services.Implementations
             }
         }
 
-        public async Task<IEnumerable<Product>> GetAllProductsAsync(int? priceType = null, List<int>? featureIds = null, List<int>? addonIds = null, bool hasActiveDiscount = false, bool sortByPrice = true)
+        public async Task<List<Product>> GetAllProductsAsync(
+            string? name = null,
+            string? priceType = null,
+            List<int>? featureIds = null,
+            bool withDiscounts = false,
+            bool sortByPrice = true)
         {
-            using var transaction = _dbContext.Database.BeginTransaction();
-            try
+            IQueryable<Product> products = _dbContext.Products.Include(p => p.Features);
+
+            // Apply filters based on the input parameters
+            if (!string.IsNullOrEmpty(name))
             {
-                return await _dbContext.Products.ToListAsync();
+                products = products.Where(p => p.Name.Contains(name));
             }
-            catch
+
+            if (!string.IsNullOrEmpty(priceType))
             {
-                await transaction.RollbackAsync();
-                throw;
+                products = products.Where(p => p.PriceType == priceType);
             }
+
+            if (featureIds != null && featureIds.Any())
+            {
+                products = products
+                    .Where(p => p.Features.Any(pf => featureIds.Contains(pf.FeatureId)));
+            }
+
+            if (withDiscounts)
+            {
+                products = products.Where(p => p.DiscountAmount != null && (p.DiscountExpireAt == null || p.DiscountExpireAt > DateTime.Now));
+            }
+
+            // Sort the products by price if specified
+            if (sortByPrice)
+            {
+                products = products.OrderBy(p => p.Price);
+            }
+
+            // Retrieve the filtered and sorted products from the database
+            var result = await products.ToListAsync();
+
+            // Return the filtered and sorted products
+            return result;
         }
+
+
 
         public async Task<Product> GetProductByIdAsync(int id, List<int>? addonIds = null)
         {

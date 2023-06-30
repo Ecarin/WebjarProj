@@ -1,7 +1,15 @@
 namespace WebjarProj.Models.Responses;
 
-public class ProductResponse
+public class SingleProductResponse : ResultDTO
 {
-        public decimal FinalPrice { get; set; }
-
+    public CustomProductResult Product { get; set; }
+    public List<Addon>? addons{ get; set; }
+}
+public class ProductsResponse : ResultDTO
+{
+    public List<CustomProductResult> Products { get; set; }
+}
+public class CustomProductResult : Product
+{
+    public decimal FinalPrice { get; set; }
 }

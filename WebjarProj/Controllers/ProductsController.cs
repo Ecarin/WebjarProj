@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using WebjarProj.Models;
 using WebjarProj.Models.Requests;
+using WebjarProj.Models.Responses;
 using WebjarProj.Services.Interfaces;
 using WebjarProj.Utility;
 
@@ -76,12 +78,11 @@ namespace WebjarProj.Controllers
                     });
                 }
 
-                if ((request.DiscountAmount is null && request.DiscountExpireAt is not null) ||
-                    (request.DiscountAmount is not null && request.DiscountExpireAt is null))
+                if (request.DiscountAmount is null && request.DiscountExpireAt is not null)
                 {
                     return BadRequest(new ResultDTO()
                     {
-                        Message = "Both DiscountAmount and DiscountExpireAt should be null or not null.",
+                        Message = "DiscountAmount can't be null.",
                     });
                 }
 
@@ -108,5 +109,35 @@ namespace WebjarProj.Controllers
             }
         }
 
+        [HttpGet()]
+        public async Task<ActionResult<ProductsResponse>> GetAllProducts(
+            [FromQuery] string? name = null,
+            [FromQuery] string? priceType = null,
+            [FromQuery] List<int>? featureIds = null,
+            [FromQuery] bool withDiscounts = false,
+            [FromQuery] bool sortByPrice = true)
+        {
+            try
+            {
+                var result = await _productService.GetAllProductsAsync(name, priceType, featureIds, withDiscounts, sortByPrice);
+                var customProduct = _mapper.Map<List<CustomProductResult>>(result);
+
+                var _response = new ProductsResponse()
+                {
+                    Success = true,
+                    Message = "Products retrieved successfuly.",
+                    Products = customProduct
+                };
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                var _response = new ResultDTO()
+                {
+                    Message = $"{e.HResult}: {e.Message}",
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebjarProj.Data;
 
@@ -11,9 +12,11 @@ using WebjarProj.Data;
 namespace WebjarProj.Migrations
 {
     [DbContext(typeof(WebjarDbContext))]
-    partial class WebjarContextModelSnapshot : ModelSnapshot
+    [Migration("20230630154802_create_database")]
+    partial class create_database
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,21 +47,26 @@ namespace WebjarProj.Migrations
 
             modelBuilder.Entity("WebjarProj.Models.Feature", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("FeatureId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FeatureId"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("FeatureId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Features");
                 });
@@ -88,8 +96,9 @@ namespace WebjarProj.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PriceType")
-                        .HasColumnType("int");
+                    b.Property<string>("PriceType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -99,46 +108,20 @@ namespace WebjarProj.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("WebjarProj.Models.Product_Feature", b =>
+            modelBuilder.Entity("WebjarProj.Models.Feature", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FeatureId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FeatureId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Product_Features");
-                });
-
-            modelBuilder.Entity("WebjarProj.Models.Product_Feature", b =>
-                {
-                    b.HasOne("WebjarProj.Models.Feature", "Feature")
-                        .WithMany()
-                        .HasForeignKey("FeatureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebjarProj.Models.Product", "Product")
-                        .WithMany()
+                        .WithMany("Features")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Feature");
-
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("WebjarProj.Models.Product", b =>
+                {
+                    b.Navigation("Features");
                 });
 #pragma warning restore 612, 618
         }

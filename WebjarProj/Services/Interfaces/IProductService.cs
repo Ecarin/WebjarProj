@@ -12,12 +12,12 @@ namespace WebjarProj.Services.Interfaces
 
         Task<Product> GetProductByIdAsync(int id, List<int>? addonIds = null);
 
-        Task<IEnumerable<Product>> GetAllProductsAsync(
-            int? priceType = null,
+        Task<List<Product>> GetAllProductsAsync(
+            string? name = null,
+            string? priceType = null,
             List<int>? featureIds = null,
-             List<int>? addonIds = null,
-             bool hasActiveDiscount = false,
-             bool sortByPrice = true);
+            bool withDiscounts = false,
+            bool sortByPrice = true);
 
         Task UpdateProductAsync(Product product);
 

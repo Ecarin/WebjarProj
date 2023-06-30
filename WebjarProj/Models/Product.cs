@@ -14,7 +14,7 @@ public class Product
     public string? Image { get; set; }
 
     [Required]
-    public PriceType PriceType { get; set; }
+    public string PriceType { get; set; }
 
     [Required]
     public string Price { get; set; }
@@ -26,10 +26,5 @@ public class Product
     [Required]
     public int Quantity { get; set; }
 
-}
-
-public enum PriceType
-{
-    CONSTANT,
-    FORMULA
+    public ICollection<Feature> Features { get; set; }
 }

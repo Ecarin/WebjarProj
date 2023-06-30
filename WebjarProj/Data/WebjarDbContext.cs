@@ -7,7 +7,7 @@ public class WebjarDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Feature> Features { get; set; }
     public DbSet<Addon> Addons { get; set; }
-    public DbSet<Product_Feature> Product_Features { get; set; }
+    //public DbSet<Product_Feature> Product_Features { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

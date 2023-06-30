@@ -125,7 +125,7 @@ namespace WebjarProj.Controllers
             try
             {
                 var feature = _mapper.Map<Feature>(request);
-                feature.Id = id;
+                feature.FeatureId = id;
 
                 await _featureService.UpdateFeatureAsync(feature);
 

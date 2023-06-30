@@ -1,6 +1,7 @@
 using AutoMapper;
 using WebjarProj.Models;
 using WebjarProj.Models.Requests;
+using WebjarProj.Models.Responses;
 
 namespace WebjarProj.Mapping
 {
@@ -20,6 +21,9 @@ namespace WebjarProj.Mapping
             // Map ProductRequests to Product
             CreateMap<ProductRequest, Product>();
             CreateMap<ProductRequest, Product>();
+
+            // Map Product to Custom Result
+            CreateMap<Product, CustomProductResult>();
         }
     }
 }
