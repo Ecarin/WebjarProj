@@ -19,9 +19,11 @@ namespace WebjarProj.Services.Interfaces
             bool withDiscounts = false,
             bool sortByPrice = true);
 
-        Task UpdateProductAsync(Product product);
+        Task UpdateProductAsync(
+            Product updatedProduct,
+            List<int>? featureIds = null);
 
-        Task DeleteProductAsync(int id);
+        Task DeleteProductByIdAsync(int productId);
     }
 
 }

@@ -8,6 +8,8 @@ namespace WebjarProj.Services.Interfaces
     {
         Task<Addon> GetAddonByIdAsync(int id);
         Task<List<Addon>> GetAllAddonsAsync();
+        Task<List<Addon>> GetAddonByIdsAsync(
+            List<int> addonIds);
         Task CreateAddonAsync(Addon addon);
         Task UpdateAddonAsync(Addon addon);
         Task DeleteAddonAsync(int id);

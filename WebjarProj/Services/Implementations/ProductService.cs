@@ -49,17 +49,30 @@ namespace WebjarProj.Services.Implementations
             }
         }
 
-        public async Task DeleteProductAsync(int id)
+        public async Task DeleteProductByIdAsync(int productId)
         {
             using var transaction = _dbContext.Database.BeginTransaction();
             try
             {
-                var product = await _dbContext.Products.FindAsync(id);
-                if (product is null)
-                    throw new ArgumentException("Product not found.");
+                // Find the product in the database
+                var product = await _dbContext.Products
+                    .Include(p => p.ProductFeatures)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
 
+                if (product is null)
+                {
+                    // Handle the case when the product does not exist
+                    throw new Exception("Product not found.");
+                }
+
+                // Remove associated product features
+                _dbContext.ProductFeatures.RemoveRange(product.ProductFeatures);
+
+                // Remove the product
                 _dbContext.Products.Remove(product);
+
                 await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch
             {
@@ -113,30 +126,62 @@ namespace WebjarProj.Services.Implementations
 
         public async Task<Product> GetProductByIdAsync(int id)
         {
-            using var transaction = _dbContext.Database.BeginTransaction();
-            try
-            {
-                return await _dbContext.Products.FindAsync(id);
-
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-                throw;
-            }
+            return await _dbContext.Products
+                .Include(p => p.ProductFeatures)
+                .ThenInclude(pf => pf.Feature)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
         }
 
-        public async Task UpdateProductAsync(Product product)
+        public async Task UpdateProductAsync(
+            Product updatedProduct,
+            List<int>? featureIds = null)
         {
+            // transactions for database safety
             using var transaction = _dbContext.Database.BeginTransaction();
             try
             {
-                _dbContext.Products.Update(product);
+                // Find the existing product in the database
+                var existingProduct = await _dbContext.Products
+                    .Include(p => p.ProductFeatures)
+                    .FirstOrDefaultAsync(p => p.ProductId == updatedProduct.ProductId);
+
+                if (existingProduct == null)
+                {
+                    // Handle the case when the product does not exist
+                    throw new Exception("Product not found.");
+                }
+
+                // Update the properties of the existing product
+                existingProduct.Name = updatedProduct.Name;
+                existingProduct.Image = updatedProduct.Image;
+                existingProduct.PriceType = updatedProduct.PriceType;
+                existingProduct.Price = updatedProduct.Price;
+                existingProduct.DiscountAmount = updatedProduct.DiscountAmount;
+                existingProduct.DiscountExpireAt = updatedProduct.DiscountExpireAt;
+                existingProduct.Quantity = updatedProduct.Quantity;
+
+                // Remove existing product features
+                existingProduct.ProductFeatures.Clear();
+
+                if (featureIds is not null && featureIds.Any())
+                {
+                    // Add the updated product features
+                    foreach (var featureId in featureIds)
+                    {
+                        var newFeature = new ProductFeature()
+                        {
+                            ProductId = updatedProduct.ProductId,
+                            FeatureId = featureId,
+                        };
+                        existingProduct.ProductFeatures.Add(newFeature);
+                    }
+                }
                 await _dbContext.SaveChangesAsync();
+                transaction.Commit();
             }
             catch
             {
-                await transaction.RollbackAsync();
+                transaction.Rollback();
                 throw;
             }
         }
