@@ -5,8 +5,8 @@ using WebjarProj.Models.Responses;
 
 namespace WebjarProj.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ImagesController : ControllerBase
     {
         [HttpPost]

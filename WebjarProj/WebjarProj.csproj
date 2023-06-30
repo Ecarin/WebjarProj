@@ -8,13 +8,6 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
-  <ItemGroup>
-    <Compile Remove="Controllers/ProductsController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Controllers/ProductsController.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.8" />

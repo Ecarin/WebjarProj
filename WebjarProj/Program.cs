@@ -16,6 +16,7 @@ builder.Services.AddDbContext<WebjarDbContext>();
 // Register Services Interface
 builder.Services.AddScoped<IAddonService, AddonService>();
 builder.Services.AddScoped<IFeatureService, FeatureService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 // Register AutoMapper
 builder.Services.AddAutoMapper(typeof(Program).Assembly);

@@ -25,6 +25,7 @@ public class Product
 
     [Required]
     public int Quantity { get; set; }
+
 }
 
 public enum PriceType
