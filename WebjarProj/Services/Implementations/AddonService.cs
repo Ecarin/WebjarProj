@@ -38,30 +38,66 @@ namespace WebjarProj.Services.Implementations
 
         public async Task CreateAddonAsync(Addon addon)
         {
-            if (addon is null)
-                throw new ArgumentNullException(nameof(addon));
+            // Using transaction for database safety
+            using var transaction = _dbContext.Database.BeginTransaction();
+            try
+            {
+                if (addon is null)
+                    throw new ArgumentNullException(nameof(addon));
 
-            _dbContext.Addons.Add(addon);
-            await _dbContext.SaveChangesAsync();
+                _dbContext.Addons.Add(addon);
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                // Rollback any changes
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task UpdateAddonAsync(Addon addon)
         {
-            if (addon is null)
-                throw new ArgumentNullException(nameof(addon));
+            // Using transaction for database safety
+            using var transaction = _dbContext.Database.BeginTransaction();
+            try
+            {
+                if (addon is null)
+                    throw new ArgumentNullException(nameof(addon));
 
-            _dbContext.Addons.Update(addon);
-            await _dbContext.SaveChangesAsync();
+                _dbContext.Addons.Update(addon);
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                // Rollback any changes
+                transaction.Rollback();
+                throw;
+            }
         }
 
         public async Task DeleteAddonAsync(int id)
         {
-            var addon = await _dbContext.Addons.FindAsync(id);
-            if (addon is null)
-                throw new ArgumentException("Addon not found.");
+            // Using transaction for database safety
+            using var transaction = _dbContext.Database.BeginTransaction();
+            try
+            {
+                var addon = await _dbContext.Addons.FindAsync(id);
+                if (addon is null)
+                    throw new ArgumentException("Addon not found.");
 
-            _dbContext.Addons.Remove(addon);
-            await _dbContext.SaveChangesAsync();
+                _dbContext.Addons.Remove(addon);
+                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                // Rollback any changes
+                transaction.Rollback();
+                throw;
+            }
         }
     }
 }
