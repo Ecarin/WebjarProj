@@ -6,7 +6,7 @@ namespace WebjarProj.Models;
 public class Product
 {
     [Key]
-    public int Id { get; set; }
+    public int ProductId { get; set; }
 
     [Required]
     public string Name { get; set; }
@@ -26,5 +26,5 @@ public class Product
     [Required]
     public int Quantity { get; set; }
 
-    public ICollection<Feature> Features { get; set; }
+    public ICollection<ProductFeature> ProductFeatures { get; set; }
 }

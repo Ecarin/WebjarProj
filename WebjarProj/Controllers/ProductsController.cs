@@ -18,7 +18,10 @@ namespace WebjarProj.Controllers
         private readonly IProductService _productService;
         private readonly IConfiguration _configuration;
 
-        public ProductsController(IMapper mapper, IProductService productService, IConfiguration configuration)
+        public ProductsController(
+            IMapper mapper,
+            IProductService productService,
+            IConfiguration configuration)
         {
             _mapper = mapper;
             _productService = productService;
@@ -26,18 +29,19 @@ namespace WebjarProj.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResultDTO>> CreateProduct(ProductRequest request,
-         [FromQuery] List<int>? featureIds = null)
+        public async Task<ActionResult<ResultDTO>> CreateProduct(
+            ProductRequest request,
+            [FromQuery] List<int>? featureIds = null)
         {
             try
             {
                 // Map the request model to Product entity
                 var product = _mapper.Map<Product>(request);
-
+                string Price;
                 // Sets the price to mapped model
                 switch (request.PriceType)
                 {
-                    case Models.Requests.PriceType.CONSTANT:
+                    case "CONSTANT":
                         if (!decimal.TryParse(request.Price, out decimal x))
                         {
                             return BadRequest(new ResultDTO()
@@ -45,14 +49,13 @@ namespace WebjarProj.Controllers
                                 Message = "Price should be number as string.",
                             });
                         }
-                        product.Price = request.Price;
+                        Price = request.Price;
                         break;
 
-                    case Models.Requests.PriceType.FORMULA:
+                    case "FORMULA":
                         // Get the $DOLLAR value from AppSettings.json
                         decimal dollarValue = _configuration.GetValue<decimal>("AppSettings:$DOLLAR");
-                        string price = Helper.CalculatePriceFromFormula(request.Price, dollarValue);
-                        product.Price = price;
+                        Price = Helper.CalculatePriceFromFormula(request.Price, dollarValue);
                         break;
 
                     default:
@@ -62,7 +65,7 @@ namespace WebjarProj.Controllers
                         });
                 }
 
-                if (decimal.Parse(product.Price) < 0)
+                if (decimal.Parse(Price) < 0)
                 {
                     return BadRequest(new ResultDTO()
                     {
@@ -70,7 +73,7 @@ namespace WebjarProj.Controllers
                     });
                 }
 
-                if (request.DiscountAmount > decimal.Parse(product.Price))
+                if (request.DiscountAmount > decimal.Parse(Price))
                 {
                     return BadRequest(new ResultDTO()
                     {
@@ -89,9 +92,7 @@ namespace WebjarProj.Controllers
                 // Call the ProductService to create the product
                 await _productService.CreateProductAsync(product, featureIds);
 
-
                 // Return a success response
-
                 var ـresponse = new ResultDTO
                 {
                     Success = true,

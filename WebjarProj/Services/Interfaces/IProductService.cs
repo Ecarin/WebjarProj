@@ -10,7 +10,7 @@ namespace WebjarProj.Services.Interfaces
     {
         Task CreateProductAsync(Product product, List<int>? featureIds = null);
 
-        Task<Product> GetProductByIdAsync(int id, List<int>? addonIds = null);
+        Task<Product> GetProductByIdAsync(int id);
 
         Task<List<Product>> GetAllProductsAsync(
             string? name = null,
