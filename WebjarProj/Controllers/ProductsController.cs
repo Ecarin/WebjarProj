@@ -154,35 +154,6 @@ namespace WebjarProj.Controllers
             }
         }
 
-        [HttpPut("{productId}")]
-        public async Task<ActionResult<ResultDTO>> UpdateProduct(
-            int productId,
-            [FromBody] ProductRequest request,
-            [FromQuery] List<int>? featureIds = null)
-        {
-            try
-            {
-                var Product = _mapper.Map<Product>(request);
-                Product.ProductId = productId;
-
-                await _productService.UpdateProductAsync(Product, featureIds);
-                var _response = new ResultDTO()
-                {
-                    Success = true,
-                    Message = $"Product updated successfuly",
-                };
-                return Ok(_response);
-            }
-            catch (Exception e)
-            {
-                var _response = new ResultDTO()
-                {
-                    Message = $"{e.HResult}: {e.Message}",
-                };
-                return StatusCode(StatusCodes.Status500InternalServerError, _response);
-            }
-        }
-
         [HttpGet("{productId}")]
         public async Task<ActionResult<SingleProductResponse>> GetProductById(
             int productId,
@@ -204,7 +175,8 @@ namespace WebjarProj.Controllers
                 if (addonIds is not null && addonIds.Any())
                 {
                     addons = await _addonService.GetAddonByIdsAsync(addonIds);
-                    foreach (var addon in addons){
+                    foreach (var addon in addons)
+                    {
                         customProduct.FinalPrice += addon.Price;
                     }
                 }
@@ -214,6 +186,87 @@ namespace WebjarProj.Controllers
                     Message = "Product retrieved successfuly.",
                     Product = customProduct,
                     addons = addons
+                };
+                return Ok(_response);
+            }
+            catch (Exception e)
+            {
+                var _response = new ResultDTO()
+                {
+                    Message = $"{e.HResult}: {e.Message}",
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+        }
+
+        [HttpPut("{productId}")]
+        public async Task<ActionResult<ResultDTO>> UpdateProduct(
+                    int productId,
+                    [FromBody] ProductRequest request,
+                    [FromQuery] List<int>? featureIds = null)
+        {
+            try
+            {
+                var Product = _mapper.Map<Product>(request);
+                Product.ProductId = productId;
+
+                string Price;
+                // Sets the price to mapped model
+                switch (request.PriceType)
+                {
+                    case "CONSTANT":
+                        if (!decimal.TryParse(request.Price, out decimal x))
+                        {
+                            return BadRequest(new ResultDTO()
+                            {
+                                Message = "Price should be number as string.",
+                            });
+                        }
+                        Price = request.Price;
+                        break;
+
+                    case "FORMULA":
+                        // Get the $DOLLAR value from AppSettings.json
+                        decimal dollarValue = _configuration.GetValue<decimal>("AppSettings:$DOLLAR");
+                        Price = Helper.CalculatePriceFromFormula(request.Price, dollarValue);
+                        break;
+
+                    default:
+                        return BadRequest(new ResultDTO()
+                        {
+                            Message = "PriceType value not supported.",
+                        });
+                }
+
+                if (decimal.Parse(Price) < 0)
+                {
+                    return BadRequest(new ResultDTO()
+                    {
+                        Message = "Price value can't be lower than zero.",
+                    });
+                }
+
+                if (request.DiscountAmount > decimal.Parse(Price))
+                {
+                    return BadRequest(new ResultDTO()
+                    {
+                        Message = "Discount value can't be higher than Price value.",
+                    });
+                }
+
+                if (request.DiscountAmount is null && request.DiscountExpireAt is not null)
+                {
+                    return BadRequest(new ResultDTO()
+                    {
+                        Message = "DiscountAmount can't be null.",
+                    });
+                }
+
+                await _productService.UpdateProductAsync(Product, featureIds);
+                var _response = new ResultDTO()
+                {
+                    Success = true,
+                    Message = $"Product updated successfuly",
                 };
                 return Ok(_response);
             }
