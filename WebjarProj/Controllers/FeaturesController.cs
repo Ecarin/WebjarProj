@@ -21,31 +21,23 @@ namespace WebjarProj.Controllers
             _featureService = featureService;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SingleFeatureResponse>> GetFeatureById(int id)
+        [HttpPost]
+        public async Task<ActionResult<ResultDTO>> CreateFeature(CreateFeatureRequest request)
         {
             try
             {
-                var feature = await _featureService.GetFeatureByIdAsync(id);
-                if (feature is null)
+                // Mapping request to Feature
+                var feature = _mapper.Map<Feature>(request);
+
+                // Creating a new Feature in db
+                await _featureService.CreateFeatureAsync(feature);
+
+                var ـresponse = new ResultDTO
                 {
-                    var _response = new SingleFeatureResponse
-                    {
-                        Success = true,
-                        Message = "Feature not found."
-                    };
-                    return Ok(_response);
-                }
-                else
-                {
-                    var _response = new SingleFeatureResponse
-                    {
-                        Success = true,
-                        Message = "Feature retrieved successfully.",
-                        Feature = feature
-                    };
-                    return Ok(_response);
-                }
+                    Success = true,
+                    Message = "Feature created successfully."
+                };
+                return CreatedAtAction(nameof(CreateFeature), ـresponse);
             }
             catch (Exception e)
             {
@@ -62,8 +54,9 @@ namespace WebjarProj.Controllers
         {
             try
             {
+                // Gets All Features from db
                 var features = await _featureService.GetAllFeaturesAsync();
-                if (features is null || features.Count == 0)
+                if (features is null || features.Count == 0) // Nothing found
                 {
                     var _response = new FeaturesResponse
                     {
@@ -72,7 +65,7 @@ namespace WebjarProj.Controllers
                     };
                     return Ok(_response);
                 }
-                else
+                else // Result found
                 {
                     var _response = new FeaturesResponse
                     {
@@ -93,21 +86,32 @@ namespace WebjarProj.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ResultDTO>> CreateFeature(CreateFeatureRequest request)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SingleFeatureResponse>> GetFeatureById(int id)
         {
             try
             {
-                var feature = _mapper.Map<Feature>(request);
-                await _featureService.CreateFeatureAsync(feature);
-
-                var ـresponse = new ResultDTO
+                // Getting Feature from db by Id
+                var feature = await _featureService.GetFeatureByIdAsync(id);
+                if (feature is null) // Nothing found
                 {
-                    Success = true,
-                    Message = "Feature created successfully."
-                };
-
-                return CreatedAtAction(nameof(CreateFeature), ـresponse);
+                    var _response = new SingleFeatureResponse
+                    {
+                        Success = true,
+                        Message = "Feature not found."
+                    };
+                    return Ok(_response);
+                }
+                else // Result found
+                {
+                    var _response = new SingleFeatureResponse
+                    {
+                        Success = true,
+                        Message = "Feature retrieved successfully.",
+                        Feature = feature
+                    };
+                    return Ok(_response);
+                }
             }
             catch (Exception e)
             {
@@ -124,9 +128,11 @@ namespace WebjarProj.Controllers
         {
             try
             {
+                // Mapping request to Feature
                 var feature = _mapper.Map<Feature>(request);
-                feature.FeatureId = id;
+                feature.FeatureId = id; // Because our request doesn't have Id so we have to map it Manually
 
+                // Update Feature to db
                 await _featureService.UpdateFeatureAsync(feature);
 
                 var _response = new ResultDTO
@@ -134,7 +140,6 @@ namespace WebjarProj.Controllers
                     Success = true,
                     Message = "Feature updated successfully."
                 };
-
                 return Ok(_response);
             }
             catch (Exception e)
@@ -152,6 +157,7 @@ namespace WebjarProj.Controllers
         {
             try
             {
+                // Delete Feature from db
                 await _featureService.DeleteFeatureAsync(id);
 
                 var _response = new ResultDTO
@@ -159,7 +165,6 @@ namespace WebjarProj.Controllers
                     Success = true,
                     Message = "Feature deleted successfully."
                 };
-
                 return Ok(_response);
             }
             catch (Exception e)
