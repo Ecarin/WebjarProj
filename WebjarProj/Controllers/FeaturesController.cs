@@ -95,13 +95,15 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Get a Feature by its Id.
         /// </summary>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SingleFeatureResponse>> GetFeatureById(int id)
+        /// <param name="featureId">unique Id of Feature</param>
+        /// <returns></returns>
+        [HttpGet("{featureId}")]
+        public async Task<ActionResult<SingleFeatureResponse>> GetFeatureById(int featureId)
         {
             try
             {
                 // Getting Feature from db by Id
-                var feature = await _featureService.GetFeatureByIdAsync(id);
+                var feature = await _featureService.GetFeatureByIdAsync(featureId);
                 if (feature is null) // Nothing found
                 {
                     var _response = new SingleFeatureResponse
@@ -135,14 +137,16 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Update Feature Name and Value.
         /// </summary>
-        [HttpPut("{id}")]
-        public async Task<ActionResult<ResultDTO>> UpdateFeature(int id, UpdateFeatureRequest request)
+        /// <param name="featureId">unique Id of Feature</param>
+        /// <returns></returns>
+        [HttpPut("{featureId}")]
+        public async Task<ActionResult<ResultDTO>> UpdateFeature(int featureId, UpdateFeatureRequest request)
         {
             try
             {
                 // Mapping request to Feature
                 var feature = _mapper.Map<Feature>(request);
-                feature.FeatureId = id; // Because our request doesn't have Id so we have to map it Manually
+                feature.FeatureId = featureId; // Because our request doesn't have Id so we have to map it Manually
 
                 // Update Feature to db
                 await _featureService.UpdateFeatureAsync(feature);
@@ -167,13 +171,15 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Delete a Feature.
         /// </summary>
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ResultDTO>> DeleteFeature(int id)
+        /// <param name="featureId">unique Id of Feature</param>
+        /// <returns></returns>
+        [HttpDelete("{featureId}")]
+        public async Task<ActionResult<ResultDTO>> DeleteFeature(int featureId)
         {
             try
             {
                 // Delete Feature from db
-                await _featureService.DeleteFeatureAsync(id);
+                await _featureService.DeleteFeatureAsync(featureId);
 
                 var _response = new ResultDTO
                 {

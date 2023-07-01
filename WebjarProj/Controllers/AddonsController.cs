@@ -97,13 +97,15 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Get Addon by Id.
         /// </summary>
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SingleAddonResponse>> GetAddonById(int id)
+        /// <param name="addonId">unique Id of Addon</param>
+        /// <returns></returns>
+        [HttpGet("{addonId}")]
+        public async Task<ActionResult<SingleAddonResponse>> GetAddonById(int addonId)
         {
             try
             {
                 // Getting Addon from db
-                var addon = await _addonService.GetAddonByIdAsync(id);
+                var addon = await _addonService.GetAddonByIdAsync(addonId);
                 if (addon is null) // No Addon found
                 {
                     var _response = new SingleAddonResponse
@@ -137,14 +139,16 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Update Addon Name and Price.
         /// </summary>
-        [HttpPut("{id}")]
-        public async Task<ActionResult<ResultDTO>> UpdateAddon(int id, UpdateAddonRequest request)
+        /// <param name="addonId">unique Id of Addon</param>
+        /// <returns></returns>
+        [HttpPut("{addonId}")]
+        public async Task<ActionResult<ResultDTO>> UpdateAddon(int addonId, UpdateAddonRequest request)
         {
             try
             {
                 // Mapping request to Addon
                 var addon = _mapper.Map<Addon>(request);
-                addon.Id = id; // Because our request didn't have Id we have to map it manually
+                addon.Id = addonId; // Because our request didn't have Id we have to map it manually
 
                 // Update Addon
                 await _addonService.UpdateAddonAsync(addon);
@@ -169,13 +173,15 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Delete an Addon.
         /// </summary>
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<ResultDTO>> DeleteAddon(int id)
+        /// <param name="addonId">unique Id of Addon</param>
+        /// <returns></returns>
+        [HttpDelete("{addonId}")]
+        public async Task<ActionResult<ResultDTO>> DeleteAddon(int addonId)
         {
             try
             {
                 // Deleting Addon from db
-                await _addonService.DeleteAddonAsync(id);
+                await _addonService.DeleteAddonAsync(addonId);
 
                 var _response = new ResultDTO
                 {

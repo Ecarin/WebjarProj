@@ -34,6 +34,8 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Creates a new Product.
         /// </summary>
+        /// <param name="featureIds">enter unique Id of Feature you choose</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<ResultDTO>> CreateProduct(
             ProductRequest request,
@@ -120,6 +122,12 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// You can pass Many optional params to filter Result.
         /// </summary>
+        /// <param name="name">[Nullable]enter Name of Product you want</param>
+        /// <param name="priceType">[Nullable]enter PriceType you want ("FORMULA" or "CONSTANT")</param>
+        /// <param name="featureIds">[Nullable]enter unique Id of Feature you want</param>
+        /// <param name="withDiscounts">enter True if you want products with active Discount otherwise enter False</param>
+        /// <param name="sortByPrice">enter True if you want products sorted by Price otherwise enter False</param>
+        /// <returns></returns>
         [HttpGet()]
         public async Task<ActionResult<ProductsResponse>> GetAllProducts(
             [FromQuery] string? name = null,
@@ -163,6 +171,9 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// You can add List AddonId to Calculate TotalPrice with Addons.
         /// </summary>
+        /// <param name="productId">enter unique Id of Product</param>
+        /// <param name="addonIds">[Nullable]enter unique Id of Addon you want</param>
+        /// <returns></returns>
         [HttpGet("{productId}")]
         public async Task<ActionResult<SingleProductResponse>> GetProductById(
             int productId,
@@ -211,6 +222,9 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Updates a Product By ProductId.
         /// </summary>
+        /// <param name="productId">enter unique Id of Product</param>
+        /// <param name="featureIds">[Nullable]enter unique Id of Features you want</param>
+        /// <returns></returns>
         [HttpPut("{productId}")]
         public async Task<ActionResult<ResultDTO>> UpdateProduct(
                     int productId,
@@ -295,6 +309,8 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Delete a Product and Dependencies from Database by ProductId.
         /// </summary>
+        /// <param name="productId">enter unique Id of Product</param>
+        /// <returns></returns>
         [HttpDelete("{productId}")]
         public async Task<ActionResult<ResultDTO>> DeleteProduct(int productId)
         {

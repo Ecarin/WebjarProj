@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace WebjarProj.Models;
 public class Feature
 {
-    [JsonIgnore]
+    //[JsonIgnore]
     public int FeatureId { get; set; }
     public string Name { get; set; }
     public string Value { get; set; }
