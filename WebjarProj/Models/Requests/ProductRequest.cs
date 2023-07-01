@@ -18,7 +18,7 @@ namespace WebjarProj.Models.Requests
         public string Image { get; set; }
 
         /// <summary>
-        /// PticeType only can be "FORMULA" or "CONSTANT"
+        /// PriceType only can be "FORMULA" or "CONSTANT"
         /// </summary>
         [Required]
         public string PriceType { get; set; }

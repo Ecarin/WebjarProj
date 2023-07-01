@@ -17,7 +17,7 @@ namespace WebjarProj.Services.Implementations
         {
             _dbContext = dbContext;
         }
-
+        
         public async Task CreateProductAsync(Product product, List<int>? featureIds = null)
         {
             // transactions for database safety

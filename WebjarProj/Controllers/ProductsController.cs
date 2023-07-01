@@ -34,8 +34,18 @@ namespace WebjarProj.Controllers
         /// <summary>
         /// Creates a new Product.
         /// </summary>
-        /// <param name="featureIds">enter unique Id of Feature you choose</param>
+        /// <param name="featureIds">[NULLABLE] enter unique Id of Feature you choose</param>
         /// <returns></returns>
+        /// <remarks>
+        /// The proper way to Insert values:
+        /// 1. Name : Name of Product
+        /// 2. Image : Enter returned value from [POST /api/Images] as Image
+        /// 3. PriceType : PriceType only can be "FORMULA" or "CONSTANT"
+        /// 4. Price : Normall price or Complex Formulas like "2*4-$DOLLAR*(10/2)" is supported.
+        /// 5. DiscountAmount : DiscountAmount can be Null or Price as number
+        /// 6. DiscountExpireAt : DiscountExpireAt can be Null to be forever or Date for Limited usage
+        /// 7. Quantity : Quantity of Product
+        /// </remarks>
         [HttpPost]
         public async Task<ActionResult<ResultDTO>> CreateProduct(
             ProductRequest request,
