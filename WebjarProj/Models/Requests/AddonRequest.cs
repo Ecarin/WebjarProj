@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace WebjarProj.Models.Requests;
 
 public class CreateAddonRequest

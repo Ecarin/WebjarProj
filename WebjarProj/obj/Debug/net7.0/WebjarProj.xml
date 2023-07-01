@@ -96,10 +96,5 @@
         <member name="M:WebjarProj.Migrations.create_database.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
-        <member name="P:WebjarProj.Models.Requests.CreateAddonRequest.Name">
-            <summary>
-            meow
-            </summary>
-        </member>
     </members>
 </doc>
