@@ -9,6 +9,9 @@ namespace WebjarProj.Controllers
     [Route("api/[controller]")]
     public class ImagesController : ControllerBase
     {
+        /// <summary>
+        /// Gets Base64 Image and returns saved "ImagePath.PNG" format.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<ImageResponse>> PostPhoto([FromBody] ImageRequest request)
         {

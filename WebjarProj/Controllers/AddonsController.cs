@@ -21,6 +21,9 @@ namespace WebjarProj.Controllers
             _addonService = addonService;
         }
 
+        /// <summary>
+        /// Addons are [optional] to create.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<ResultDTO>> CreateAddon(CreateAddonRequest request)
         {
@@ -50,6 +53,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all Addons.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<AddonsResponse>> GetAllAddons()
         {
@@ -88,6 +94,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// Get Addon by Id.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<SingleAddonResponse>> GetAddonById(int id)
         {
@@ -124,6 +133,10 @@ namespace WebjarProj.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
+
+        /// <summary>
+        /// Update Addon Name and Price.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<ActionResult<ResultDTO>> UpdateAddon(int id, UpdateAddonRequest request)
         {
@@ -152,6 +165,10 @@ namespace WebjarProj.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
         }
+
+        /// <summary>
+        /// Delete an Addon.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResultDTO>> DeleteAddon(int id)
         {

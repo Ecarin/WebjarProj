@@ -31,6 +31,9 @@ namespace WebjarProj.Controllers
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Creates a new Product.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<ResultDTO>> CreateProduct(
             ProductRequest request,
@@ -114,6 +117,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// You can pass Many optional params to filter Result.
+        /// </summary>
         [HttpGet()]
         public async Task<ActionResult<ProductsResponse>> GetAllProducts(
             [FromQuery] string? name = null,
@@ -154,6 +160,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// You can add List AddonId to Calculate TotalPrice with Addons.
+        /// </summary>
         [HttpGet("{productId}")]
         public async Task<ActionResult<SingleProductResponse>> GetProductById(
             int productId,
@@ -199,6 +208,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// Updates a Product By ProductId.
+        /// </summary>
         [HttpPut("{productId}")]
         public async Task<ActionResult<ResultDTO>> UpdateProduct(
                     int productId,
@@ -280,6 +292,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete a Product and Dependencies from Database by ProductId.
+        /// </summary>
         [HttpDelete("{productId}")]
         public async Task<ActionResult<ResultDTO>> DeleteProduct(int productId)
         {

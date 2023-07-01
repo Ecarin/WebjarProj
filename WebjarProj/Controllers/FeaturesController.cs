@@ -21,6 +21,9 @@ namespace WebjarProj.Controllers
             _featureService = featureService;
         }
 
+        /// <summary>
+        /// Create some Features before creating a Product.
+        /// </summary>
         [HttpPost]
         public async Task<ActionResult<ResultDTO>> CreateFeature(CreateFeatureRequest request)
         {
@@ -49,6 +52,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// Get all Features.
+        /// </summary>
         [HttpGet]
         public async Task<ActionResult<FeaturesResponse>> GetAllFeatures()
         {
@@ -86,6 +92,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// Get a Feature by its Id.
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<ActionResult<SingleFeatureResponse>> GetFeatureById(int id)
         {
@@ -123,6 +132,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// Update Feature Name and Value.
+        /// </summary>
         [HttpPut("{id}")]
         public async Task<ActionResult<ResultDTO>> UpdateFeature(int id, UpdateFeatureRequest request)
         {
@@ -152,6 +164,9 @@ namespace WebjarProj.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete a Feature.
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<ActionResult<ResultDTO>> DeleteFeature(int id)
         {
